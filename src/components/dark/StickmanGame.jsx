@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
+const StickmanGame = ({ gameState = { stickmanPosition: { x: 10, y: 82 } }, setGameState = () => {}, transitionToRoom = () => {} }) => {
   const [gamePhysics, setGamePhysics] = useState({
     velocity: { x: 0, y: 0 },
     onGround: true,
@@ -12,6 +12,11 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
     { id: 3, x: 75, y: 42, collected: false }
   ]);
   const [keys, setKeys] = useState({});
+  const [touchControls, setTouchControls] = useState({
+    left: false,
+    right: false,
+    jump: false
+  });
 
   // Platform definitions
   const platforms = [
@@ -39,6 +44,15 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
     };
   }, [handleKeyDown, handleKeyUp]);
 
+  // Touch control handlers
+  const handleTouchStart = (control) => {
+    setTouchControls(prev => ({ ...prev, [control]: true }));
+  };
+
+  const handleTouchEnd = (control) => {
+    setTouchControls(prev => ({ ...prev, [control]: false }));
+  };
+
   // Collision detection
   const checkPlatformCollision = (x, y, width = 3, height = 8) => {
     for (let platform of platforms) {
@@ -62,17 +76,22 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
         let onGround = false;
         let canDoubleJump = gamePhysics.canDoubleJump;
 
+        // Check both keyboard and touch inputs
+        const leftPressed = keys['a'] || keys['arrowleft'] || touchControls.left;
+        const rightPressed = keys['d'] || keys['arrowright'] || touchControls.right;
+        const jumpPressed = keys[' '] || keys['w'] || keys['arrowup'] || touchControls.jump;
+
         // Horizontal movement
-        if (keys['a'] || keys['arrowleft']) {
+        if (leftPressed) {
           newVelocity.x = Math.max(newVelocity.x - 0.5, -3);
-        } else if (keys['d'] || keys['arrowright']) {
+        } else if (rightPressed) {
           newVelocity.x = Math.min(newVelocity.x + 0.5, 3);
         } else {
           newVelocity.x *= 0.8; // Friction
         }
 
         // Jumping
-        if ((keys[' '] || keys['w'] || keys['arrowup']) && (gamePhysics.onGround || gamePhysics.canDoubleJump)) {
+        if (jumpPressed && (gamePhysics.onGround || gamePhysics.canDoubleJump)) {
           if (gamePhysics.onGround) {
             newVelocity.y = -8;
             onGround = false;
@@ -124,7 +143,7 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
     }, 16); // 60 FPS
 
     return () => clearInterval(gameLoop);
-  }, [keys, gamePhysics]);
+  }, [keys, touchControls, gamePhysics]);
 
   // Collectible collection
   useEffect(() => {
@@ -146,15 +165,15 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
   const isNearGoal = gameState.stickmanPosition.x > 85 && gameState.stickmanPosition.y < 50;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-800 to-purple-800 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-700 flex flex-col items-center justify-center p-4">
       <div className="text-center mb-6">
         <h1 className="text-white text-3xl mb-2 font-bold">Platform Game</h1>
         <div className="text-white text-lg">
           Collected: {collectedCount}/{collectibles.length}
         </div>
-        <div className="text-gray-300 text-sm mt-2">
+        {/* <div className="text-gray-300 text-sm mt-2">
           Use WASD or Arrow Keys to move and jump
-        </div>
+        </div> */}
       </div>
       
       <div className="relative w-full max-w-4xl h-80 bg-black border-2 border-white rounded-lg overflow-hidden">
@@ -196,15 +215,69 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
           }}
         />
       </div>
+
+      {/* Touch Controls for Mobile */}
+      <div className="flex justify-center items-center space-x-4 mt-6 md:hidden">
+        <div className="flex space-x-2">
+          <button
+            onTouchStart={(e) => {
+              e.preventDefault();
+              handleTouchStart('left');
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              handleTouchEnd('left');
+            }}
+            onMouseDown={() => handleTouchStart('left')}
+            onMouseUp={() => handleTouchEnd('left')}
+            onMouseLeave={() => handleTouchEnd('left')}
+            className="w-16 h-10 rounded-lg border-2 border-white text-white font-bold text-lg select-none !bg-blue-800 active:bg-blue-600"
+          >
+            ←
+          </button>
+          <button
+            onTouchStart={(e) => {
+              e.preventDefault();
+              handleTouchStart('right');
+            }}
+            onTouchEnd={(e) => {
+              e.preventDefault();
+              handleTouchEnd('right');
+            }}
+            onMouseDown={() => handleTouchStart('right')}
+            onMouseUp={() => handleTouchEnd('right')}
+            onMouseLeave={() => handleTouchEnd('right')}
+            className="w-16 h-10 rounded-lg border-2 border-white text-white font-bold text-lg select-none !bg-blue-800 active:bg-blue-600"
+          >
+            →
+          </button>
+        </div>
+        <button
+          onTouchStart={(e) => {
+            e.preventDefault();
+            handleTouchStart('jump');
+          }}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            handleTouchEnd('jump');
+          }}
+          onMouseDown={() => handleTouchStart('jump')}
+          onMouseUp={() => handleTouchEnd('jump')}
+          onMouseLeave={() => handleTouchEnd('jump')}
+          className="w-20 h-10 rounded-lg border-1 border-white text-white font-bold text-sm select-none !bg-green-800 active:bg-green-600"
+        >
+          JUMP
+        </button>
+      </div>
       
       {/* Victory condition */}
       {isNearGoal && allCollected && (
         <div className="mt-6 text-center">
-          <div className="bg-black bg-opacity-50 rounded-lg p-4 border border-white">
-            <p className="text-white text-xl mb-4">Level Complete!</p>
+          <div className="bg-black bg-opacity-50 rounded-lg p-3 shadow-lg">
+            <p className="text-white text-xl mb-4">Level Complete</p>
             <button
               onClick={() => transitionToRoom('final-chaos')}
-              className="px-6 py-3 !bg-red-600 hover:bg-red-700 text-white rounded transition-colors duration-300"
+              className="px-9 py-2 !bg-red-600 hover:bg-red-700 text-white rounded transition-colors duration-300"
             >
               Continue
             </button>
@@ -224,4 +297,4 @@ const StickmanGame = ({ gameState, setGameState, transitionToRoom }) => {
   );
 };
 
-export default StickmanGame;
+export default StickmanGame;  

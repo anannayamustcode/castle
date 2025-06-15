@@ -50,42 +50,33 @@ const MemoryGarden = ({ onBack }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-rose-50 flex items-center justify-center p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-rose-50 flex items-center justify-center p-4 sm:p-8 relative overflow-hidden">
       {/* Floating elements for cottagecore atmosphere */}
-      <div className="absolute top-10 left-10 text-6xl opacity-20 animate-pulse">🌿</div>
-      <div className="absolute top-20 right-20 text-4xl opacity-30 animate-bounce">🦋</div>
-      <div className="absolute bottom-20 left-20 text-5xl opacity-25 animate-pulse">🌸</div>
-      <div className="absolute bottom-10 right-10 text-4xl opacity-20 animate-bounce">🍄</div>
-      <div className="absolute top-1/3 left-1/4 text-3xl opacity-15 animate-pulse">✨</div>
-      <div className="absolute bottom-1/3 right-1/4 text-3xl opacity-15 animate-pulse">🌻</div>
-      <div className="absolute top-1/2 left-10 text-3xl opacity-20 animate-pulse">🌺</div>
-      <div className="absolute top-40 right-40 text-2xl opacity-25 animate-bounce">🧚‍♀️</div>
+      <div className="absolute top-5 left-5 sm:top-10 sm:left-10 text-4xl sm:text-6xl opacity-20 animate-pulse">🌿</div>
+      <div className="absolute top-10 right-10 sm:top-20 sm:right-20 text-3xl sm:text-4xl opacity-30 animate-bounce">🦋</div>
+      <div className="absolute bottom-10 left-10 sm:bottom-20 sm:left-20 text-4xl sm:text-5xl opacity-25 animate-pulse">🌸</div>
+      <div className="absolute bottom-5 right-5 sm:bottom-10 sm:right-10 text-3xl sm:text-4xl opacity-20 animate-bounce">🍄</div>
+      <div className="absolute top-1/3 left-1/4 text-2xl sm:text-3xl opacity-15 animate-pulse">✨</div>
+      <div className="absolute bottom-1/3 right-1/4 text-2xl sm:text-3xl opacity-15 animate-pulse">🌻</div>
+      <div className="absolute top-1/2 left-5 sm:left-10 text-2xl sm:text-3xl opacity-20 animate-pulse">🌺</div>
+      <div className="absolute top-20 right-20 sm:top-40 sm:right-40 text-xl sm:text-2xl opacity-25 animate-bounce">🧚‍♀️</div>
       
-      <div className="bg-gradient-to-br from-cream-100 to-stone-100 rounded-[2rem] shadow-2xl border-4 border-amber-200 p-12 max-w-4xl w-full relative backdrop-blur-sm bg-opacity-90">
+      <div className="bg-gradient-to-br from-cream-100 to-stone-100 rounded-xl sm:rounded-[2rem] shadow-2xl border-2 sm:border-4 border-amber-200 p-6 sm:p-12 max-w-4xl w-full relative backdrop-blur-sm bg-opacity-90">
         {/* Decorative corners */}
-        <div className="absolute top-4 left-4 text-2xl">🌾</div>
-        <div className="absolute top-4 right-4 text-2xl">🌾</div>
-        <div className="absolute bottom-4 left-4 text-2xl">🌾</div>
-        <div className="absolute bottom-4 right-4 text-2xl">🌾</div>
+        <div className="absolute top-2 left-2 sm:top-4 sm:left-4 text-lg sm:text-2xl">🌾</div>
+        <div className="absolute top-2 right-2 sm:top-4 sm:right-4 text-lg sm:text-2xl">🌾</div>
+        <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 text-lg sm:text-2xl">🌾</div>
+        <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 text-lg sm:text-2xl">🌾</div>
         
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4 animate-bounce">🌻</div>
-          {/* <div className="flex justify-center items-center gap-2 mb-4">
-            <span className="text-2xl">🌸</span>
-            <span className="text-2xl">🌿</span>
-            <span className="text-2xl">🌻</span>
-            <span className="text-2xl">🦋</span>
-            <span className="text-2xl">🌸</span>
-          </div> */}
-          <h2 className="text-4xl font-light text-amber-800 mb-3">Memory Garden</h2>
-          {/* <p className="text-amber-600 text-lg font-light mb-6">Find matching pairs among the wildflowers!</p> */}
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="text-4xl sm:text-6xl mb-3 sm:mb-4 animate-bounce">🌻</div>
+          <h2 className="text-2xl sm:text-4xl font-light text-amber-800 mb-3">Memory Garden</h2>
           
-          <div className="flex justify-center gap-6 mb-4">
-
+          <div className="flex justify-center gap-3 sm:gap-6 mb-4">
             {gameWon && (
-              <div className="bg-gradient-to-r from-green-100 to-emerald-100 px-6 py-3 rounded-full border-2 border-green-200 shadow-sm animate-pulse">
-                <span className="text-green-700 font-light flex items-center gap-2">
-                  <span className="text-lg">🎉</span>
+              <div className="bg-gradient-to-r from-green-100 to-emerald-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full border-2 border-green-200 shadow-sm animate-pulse">
+                <span className="text-green-700 font-light flex items-center gap-2 text-sm sm:text-base">
+                  <span className="text-base sm:text-lg">🎉</span>
                   Garden Complete!
                 </span>
               </div>
@@ -93,7 +84,7 @@ const MemoryGarden = ({ onBack }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-4 mb-8 max-w-lg mx-auto">
+        <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-6 sm:mb-8 max-w-xs sm:max-w-lg mx-auto">
           {cards.map((card, index) => {
             const IconComponent = card.icon;
             const isFlipped = flipped.includes(index) || matched.includes(index);
@@ -102,7 +93,7 @@ const MemoryGarden = ({ onBack }) => {
               <button
                 key={index}
                 onClick={() => handleCardClick(index)}
-                className={`aspect-square rounded-2xl border-3 transition-all duration-500 hover:scale-110 hover:shadow-lg relative group overflow-hidden ${
+                className={`aspect-square rounded-lg sm:rounded-2xl border-2 sm:border-3 transition-all duration-500 hover:scale-110 hover:shadow-lg relative group overflow-hidden ${
                   isFlipped 
                     ? matched.includes(index)
                       ? 'bg-gradient-to-br from-green-100 to-emerald-100 border-green-300 shadow-lg'
@@ -115,7 +106,7 @@ const MemoryGarden = ({ onBack }) => {
                 {isFlipped && (
                   <div className="flex items-center justify-center h-full">
                     <IconComponent 
-                      className={`w-8 h-8 transition-all duration-300 ${
+                      className={`w-5 h-5 sm:w-8 sm:h-8 transition-all duration-300 ${
                         matched.includes(index) 
                           ? 'text-green-600 animate-pulse' 
                           : 'text-amber-600'
@@ -126,8 +117,8 @@ const MemoryGarden = ({ onBack }) => {
                 
                 {!isFlipped && (
                   <div className="flex items-center justify-center h-full">
-                    <div className="w-6 h-6 bg-gradient-to-br from-amber-200 to-stone-200 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
-                    <div className="absolute top-2 right-2 text-xs opacity-30 group-hover:opacity-50">🌸</div>
+                    <div className="w-4 h-4 sm:w-6 sm:h-6 bg-gradient-to-br from-amber-200 to-stone-200 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                    <div className="absolute top-1 right-1 sm:top-2 sm:right-2 text-xs opacity-30 group-hover:opacity-50">🌸</div>
                   </div>
                 )}
               </button>
@@ -135,41 +126,40 @@ const MemoryGarden = ({ onBack }) => {
           })}
         </div>
 
-        <div className="flex justify-center gap-6">
-                        <div className="bg-gradient-to-r from-yellow-100 to-amber-100 px-6 py-3 rounded-full border-2 border-amber-200 shadow-sm">
-              <span className="text-amber-700 font-light flex items-center gap-2">
-                <span className="text-lg">🌾</span>
-                Moves: {moves}
-              </span>
-            </div>
+        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-6 items-center">
+          <div className="bg-gradient-to-r from-yellow-100 to-amber-100 px-4 sm:px-6 py-2 sm:py-3 rounded-full border-2 border-amber-200 shadow-sm">
+            <span className="text-amber-700 font-light flex items-center gap-2 text-sm sm:text-base">
+              <span className="text-base sm:text-lg">🌾</span>
+              Moves: {moves}
+            </span>
+          </div>
+          
           <button
             onClick={resetGame}
-            className="px-8 py-4 bg-gradient-to-r from-yellow-100 to-amber-100 hover:from-yellow-200 hover:to-amber-200 rounded-full border-2 border-amber-200 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl relative group"
+            className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-yellow-100 to-amber-100 hover:from-yellow-200 hover:to-amber-200 rounded-full border-2 border-amber-200 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl relative group"
           >
-            <div className="flex items-center gap-3">
-              {/* <span className="text-lg group-hover:animate-spin">🔄</span> */}
-              <span className="text-amber-800 font-light">Plant New Garden</span>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-amber-800 font-light text-sm sm:text-base">Plant New Garden</span>
             </div>
           </button>
           
           <button
             onClick={onBack}
-            className="px-8 py-4 bg-gradient-to-r from-stone-200 to-amber-200 hover:from-stone-300 hover:to-amber-300 rounded-full border-2 border-stone-300 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl relative group"
+            className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-stone-200 to-amber-200 hover:from-stone-300 hover:to-amber-300 rounded-full border-2 border-stone-300 transition-all duration-500 hover:scale-105 shadow-lg hover:shadow-xl relative group"
           >
-            <div className="flex items-center gap-3">
-              <span className="text-lg group-hover:animate-pulse">🏠</span>
-              {/* <span className="text-stone-700 font-light">Back to Cottage</span> */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-base sm:text-lg group-hover:animate-pulse">🏠</span>
             </div>
           </button>
         </div>
         
         {/* Bottom decorative border */}
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2">
-          <span className="text-lg opacity-30">🌸</span>
-          <span className="text-lg opacity-30">🌿</span>
-          <span className="text-lg opacity-30">🌻</span>
-          <span className="text-lg opacity-30">🍄</span>
-          <span className="text-lg opacity-30">🌸</span>
+        <div className="absolute bottom-1 sm:bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1 sm:gap-2">
+          <span className="text-sm sm:text-lg opacity-30">🌸</span>
+          <span className="text-sm sm:text-lg opacity-30">🌿</span>
+          <span className="text-sm sm:text-lg opacity-30">🌻</span>
+          <span className="text-sm sm:text-lg opacity-30">🍄</span>
+          <span className="text-sm sm:text-lg opacity-30">🌸</span>
         </div>
       </div>
     </div>

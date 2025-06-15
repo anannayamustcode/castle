@@ -22,7 +22,7 @@ const WholesomeRoom = ({ setCurrentRoom }) => {
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-rose-50 flex items-center justify-center p-8 relative overflow-hidden">
       {/* Floating elements for cottagecore atmosphere */}
       <div className="absolute top-10 left-10 text-6xl opacity-20 animate-pulse">🌿</div>
-      <div className="absolute top-20 right-20 text-4xl opacity-30 animate-bounce">🦋</div>
+      <div className="absolute top-20 right-20 text-4xl opacity-30 animate-bounce">🐝</div>
       <div className="absolute bottom-20 left-20 text-5xl opacity-25 animate-pulse">🌸</div>
       <div className="absolute bottom-10 right-10 text-4xl opacity-20 animate-bounce">🍄</div>
       <div className="absolute top-1/3 left-1/4 text-3xl opacity-15 animate-pulse">✨</div>
@@ -41,7 +41,7 @@ const WholesomeRoom = ({ setCurrentRoom }) => {
             <span className="text-2xl">🌸</span>
             <span className="text-2xl">🌿</span>
             <span className="text-2xl">🌻</span>
-            <span className="text-2xl">🦋</span>
+            <span className="text-2xl">🐝</span>
             <span className="text-2xl">🌸</span>
           </div> */}
         </div>
@@ -80,10 +80,10 @@ const WholesomeRoom = ({ setCurrentRoom }) => {
             className="bg-gradient-to-br from-rose-100 to-pink-100 rounded-2xl p-8 border-4 border-rose-200 hover:border-rose-300 transition-all duration-500 hover:scale-110 hover:shadow-2xl hover:rotate-1 relative group overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-rose-200 to-pink-200 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-            <div className="text-6xl mb-4 group-hover:animate-bounce">🎨</div>
+            <div className="text-6xl mb-4 group-hover:animate-bounce">🕳️</div>
             {/* <div className="flex justify-center gap-1 mb-2">
               <span className="text-lg">🌸</span>
-              <span className="text-lg">🦋</span>
+              <span className="text-lg">🐝</span>
               <span className="text-lg">🌸</span>
             </div> */}
             <div className="absolute top-2 right-2 text-lg opacity-50">💫</div>

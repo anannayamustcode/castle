@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
+const PuzzleMaze = ({ gameState = {}, setGameState = () => {}, transitionToRoom = () => {} }) => {
   const [playerPos, setPlayerPos] = useState({ x: 1, y: 1 });
   const [ghostPositions, setGhostPositions] = useState([
     { x: 5, y: 3 }, { x: 9, y: 7 }, { x: 11, y: 11 }
@@ -27,10 +27,10 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
   ];
 
   const puzzlePieces = [
-    { id: 1, shape: '🌙', clue: "", pos: { x: 13, y: 2 } },
-    { id: 2, shape: '🔮', clue: "", pos: { x: 1, y: 6 } },
-    { id: 3, shape: '🕯️', clue: "", pos: { x: 13, y: 10 } },
-    { id: 4, shape: '⭐', clue: "", pos: { x: 13, y: 12 } }
+    { id: 1, shape: '🌙', clue: "Night's mystic guide", pos: { x: 13, y: 2 } },
+    { id: 2, shape: '🔮', clue: "Crystal of foresight", pos: { x: 1, y: 6 } },
+    { id: 3, shape: '🕯️', clue: "Flame of ancient wisdom", pos: { x: 13, y: 10 } },
+    { id: 4, shape: '⭐', clue: "Celestial beacon", pos: { x: 13, y: 12 } }
   ];
 
   const [collectedPieces, setCollectedPieces] = useState(gameState.puzzlePieces || []);
@@ -183,7 +183,7 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
   };
 
   const getCellClass = (x, y) => {
-    const baseClass = "w-8 h-8 flex items-center justify-center text-lg transition-all duration-300 relative";
+    const baseClass = "w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center text-sm sm:text-lg transition-all duration-300 relative touch-manipulation";
     
     if (maze[y][x] === 0) {
       return `${baseClass} bg-gradient-to-br from-purple-900 to-black border border-purple-700 shadow-inner`; // Walls
@@ -193,7 +193,8 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
       return `${baseClass} bg-gradient-to-r from-yellow-400 to-orange-500 ${collectedPieces.length >= 3 ? 'animate-bounce' : 'opacity-30'}`; // Exit
     } else {
       const isGhostHere = ghostPositions.some(g => g.x === x && g.y === y);
-      return `${baseClass} bg-gradient-to-br from-gray-800 to-gray-900 hover:from-gray-700 hover:to-gray-800 ${isGhostHere ? 'animate-pulse bg-red-900' : ''}`; // Path
+      const isAdjacent = Math.abs(x - playerPos.x) + Math.abs(y - playerPos.y) === 1;
+      return `${baseClass} bg-gradient-to-br from-gray-800 to-gray-900 ${isAdjacent ? 'hover:from-gray-700 hover:to-gray-800 active:from-gray-600 active:to-gray-700' : ''} ${isGhostHere ? 'animate-pulse bg-red-900' : ''}`; // Path
     }
   };
 
@@ -206,19 +207,21 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
     }
   };
 
-  const handleExitClick = () => {
-    if (collectedPieces.length >= 3 && playerPos.x === 7 && playerPos.y === 14) {
-      transitionToRoom('cryptic-chat');
-    }
-  };
+const handleExitClick = () => {
+  if (collectedPieces.length >= 3 && playerPos.x === 7 && playerPos.y === 14) {
+    transitionToRoom('cryptic-chat'); // Transition to next room
+    //here
+  }
+};
+
 
   return (
-<div className="min-h-screen bg-gradient-to-b from-black to-purple-800 p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-black to-purple-800 p-2 sm:p-4 relative overflow-hidden">
       {/* Floating magical elements */}
       {floatingElements.map(element => (
         <div
           key={element.id}
-          className="absolute text-2xl pointer-events-none animate-bounce"
+          className="absolute text-lg sm:text-2xl pointer-events-none animate-bounce"
           style={{
             left: `${element.x}%`,
             top: `${element.y}%`,
@@ -234,7 +237,7 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
       {magicParticles.map(particle => (
         <div
           key={particle.id}
-          className="absolute text-xl pointer-events-none animate-ping"
+          className="absolute text-lg sm:text-xl pointer-events-none animate-ping"
           style={{
             left: particle.x,
             top: particle.y,
@@ -245,57 +248,114 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
         </div>
       ))}
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        <h1 className="text-white text-4xl text-center mb-6 font-mono animate-pulse">
-        Your typical maze
+      <div className="max-w-7xl mx-auto relative z-10">
+        <h1 className="text-white text-2xl sm:text-4xl text-center mb-4 sm:mb-6 font-mono animate-pulse">
+          Your typical maze
         </h1>
         
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Maze */}
-          <div className="flex-1">
-            <div className="inline-block bg-black/50 backdrop-blur-sm p-4 rounded-2xl shadow-2xl border border-purple-500/30">
-              {maze.map((row, y) => (
-                <div key={y} className="flex">
-                  {row.map((cell, x) => (
-                    <div
-                      key={`${x}-${y}`}
-                      className={getCellClass(x, y)}
-                      onClick={() => handleCellClick(x, y)}
-                      style={{
-                        cursor: Math.abs(x - playerPos.x) + Math.abs(y - playerPos.y) === 1 ? 'pointer' : 'default'
-                      }}
-                    >
-                      {getCellContent(x, y)}
-                    </div>
-                  ))}
-                </div>
-              ))}
+        <div className="flex flex-col xl:flex-row gap-4 sm:gap-8">
+          {/* Maze Container */}
+          <div className="flex-1 flex flex-col items-center">
+            <div className="overflow-auto max-w-full">
+              <div className="inline-block bg-black/50 backdrop-blur-sm p-2 sm:p-4 rounded-2xl shadow-2xl border border-purple-500/30">
+                {maze.map((row, y) => (
+                  <div key={y} className="flex">
+                    {row.map((cell, x) => (
+                      <div
+                        key={`${x}-${y}`}
+                        className={getCellClass(x, y)}
+                        onClick={() => handleCellClick(x, y)}
+                        style={{
+                          cursor: Math.abs(x - playerPos.x) + Math.abs(y - playerPos.y) === 1 ? 'pointer' : 'default'
+                        }}
+                      >
+                        {getCellContent(x, y)}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
             
+            {/* Mobile Controls */}
+            <div className="mt-4 flex flex-col items-center gap-4 sm:hidden">
+              <div className="grid grid-cols-3 gap-2 w-32">
+                <div></div>
+                <button
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    movePlayer(0, -1);
+                  }}
+                  onClick={() => movePlayer(0, -1)}
+                  className="w-10 h-10 !bg-purple-600/80 backdrop-blur-sm border border-purple-400 rounded-lg flex items-center justify-center text-white text-xl font-bold active:bg-purple-700 transition-all duration-150"
+                >
+                  ↑
+                </button>
+                <div></div>
+                <button
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    movePlayer(-1, 0);
+                  }}
+                  onClick={() => movePlayer(-1, 0)}
+                  className="w-10 h-10 !bg-purple-600/80 backdrop-blur-sm border border-purple-400 rounded-lg flex items-center justify-center text-white text-xl font-bold active:bg-purple-700 transition-all duration-150"
+                >
+                  ←
+                </button>
+                <div></div>
+                <button
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    movePlayer(1, 0);
+                  }}
+                  onClick={() => movePlayer(1, 0)}
+                  className="w-10 h-10 !bg-purple-600/80 backdrop-blur-sm border border-purple-400 rounded-lg flex items-center justify-center text-white text-xl font-bold active:bg-purple-700 transition-all duration-150"
+                >
+                  →
+                </button>
+                <div></div>
+                <button
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    movePlayer(0, 1);
+                  }}
+                  onClick={() => movePlayer(0, 1)}
+                  className="w-10 h-10 !bg-purple-600/80 backdrop-blur-sm border border-purple-400 rounded-lg flex items-center justify-center text-white text-xl font-bold active:bg-purple-700 transition-all duration-150"
+                >
+                  ↓
+                </button>
+                <div></div>
+              </div>
+              <p className="text-purple-200 text-xs text-center">
+                Use buttons or tap adjacent cells to move
+              </p>
+            </div>
+            
+            {/* Exit Button */}
             <div className="mt-4 text-center">
-             {playerPos.x === 7 && playerPos.y === 14 && collectedPieces.length >= 3 && (
+              {playerPos.x === 7 && playerPos.y === 14 && collectedPieces.length >= 3 && (
                 <button
                   onClick={handleExitClick}
-                  className="px-9 py-3 bg-gradient-to-r from-purple-500 to-black hover:from-purple-600 hover:to-black text-white rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg animate-bounce font-bold"
+                  className="px-6 sm:px-9 py-2 sm:py-3 bg-gradient-to-r from-purple-500 to-black hover:from-purple-600 hover:to-black text-white rounded-full transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg animate-bounce font-bold text-sm sm:text-base"
                 >
-                Enter the Portal 
+                  Enter the Portal 
                 </button>
               )}
             </div>
           </div>
           
           {/* Mystical Inventory */}
-          <div className="lg:w-80">
-            <div className="bg-black/40 backdrop-blur-sm p-6 rounded-2xl border border-purple-500/30 shadow-2xl">
-              <h2 className="text-purple-200 text-xl mb-4 font-mono flex items-center gap-2">
+          <div className="xl:w-80 w-full">
+            <div className="bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-2xl border border-purple-500/30 shadow-2xl">
+              <h2 className="text-purple-200 text-lg sm:text-xl mb-4 font-mono flex items-center gap-2">
                 🔮 Mystical Findings
               </h2>
-              <div className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-3">
                 {puzzlePieces.map((piece) => (
                   <div
                     key={piece.id}
                     className={`
-                      p-4 rounded-xl transition-all duration-500 border-2
+                      p-3 sm:p-4 rounded-xl transition-all duration-500 border-2
                       ${collectedPieces.includes(piece.id) 
                         ? 'bg-gradient-to-r from-green-600/30 to-emerald-600/30 border-green-400/50 shadow-green-500/20 shadow-lg animate-pulse' 
                         : 'bg-gray-800/50 border-gray-600/30 opacity-60'
@@ -303,13 +363,13 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
                     `}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-3xl animate-bounce">{piece.shape}</span>
-                      <div>
-                        <p className="text-white text-sm font-bold">
-                          {collectedPieces.includes(piece.id) ? ' ' : '❓ Hidden'}
+                      <span className="text-2xl sm:text-3xl animate-bounce">{piece.shape}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-sm font-bold truncate">
+                          {collectedPieces.includes(piece.id) ? piece.clue : '❓ Hidden'}
                         </p>
                         {collectedPieces.includes(piece.id) && (
-                          <p className="text-green-200 text-xs mt-1 italic font-mono">"{piece.clue}"</p>
+                          <p className="text-green-200 text-xs mt-1 italic font-mono">Collected!</p>
                         )}
                       </div>
                     </div>
@@ -317,20 +377,28 @@ const PuzzleMaze = ({ gameState, setGameState, transitionToRoom }) => {
                 ))}
               </div>
               
-              <div className="mt-6 p-4 bg-purple-900/30 rounded-xl border border-purple-400/30">
+              <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-purple-900/30 rounded-xl border border-purple-400/30">
                 <p className="text-purple-200 text-sm font-mono flex items-center gap-2">
-                 {collectedPieces.length}/4 mysteries
+                  {collectedPieces.length}/4 mysteries solved
                 </p>
-                <div className="w-full bg-gray-700/50 rounded-full h-3 mt-2 overflow-hidden">
+                <div className="w-full bg-gray-700/50 rounded-full h-2 sm:h-3 mt-2 overflow-hidden">
                   <div 
-                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-700 shadow-lg"
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 sm:h-3 rounded-full transition-all duration-700 shadow-lg"
                     style={{ width: `${(collectedPieces.length / 4) * 100}%` }}
                   ></div>
                 </div>
                 {collectedPieces.length >= 3 && (
                   <p className="text-green-300 text-xs mt-2 animate-pulse font-bold">
+                    Portal is unlocking... Find the exit!
                   </p>
                 )}
+              </div>
+              
+              {/* Desktop Controls Info */}
+              <div className="hidden sm:block mt-4 p-3 bg-gray-900/30 rounded-xl border border-gray-600/30">
+                <p className="text-gray-300 text-xs font-mono text-center">
+                  Use WASD or Arrow Keys to move
+                </p>
               </div>
             </div>
           </div>

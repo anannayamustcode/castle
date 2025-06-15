@@ -1,24 +1,37 @@
 import React, { useState, useEffect } from 'react';
 
 const MoralDilemma = ({ gameState = {}, setGameState = () => {}, transitionToRoom = () => {} }) => {
-  const [trainPosition, setTrainPosition] = useState(-20); // Start way to the left
+  const [trainPosition, setTrainPosition] = useState(-20);
   const [isAnimating, setIsAnimating] = useState(false);
   const [showImpact, setShowImpact] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTrainPosition(prev => {
-        const newPos = prev + 0.4;
-        if (newPos > 100) return -20; // Reset when off screen
-        if (newPos > 75 && !showImpact) {
-          setShowImpact(true);
-          setTimeout(() => setShowImpact(false), 2000);
-        }
-        return newPos;
-      });
-    }, 50);
-    return () => clearInterval(interval);
-  }, [showImpact]);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) {
+      const interval = setInterval(() => {
+        setTrainPosition(prev => {
+          const newPos = prev + 0.4;
+          if (newPos > 100) return -20;
+          if (newPos > 75 && !showImpact) {
+            setShowImpact(true);
+            setTimeout(() => setShowImpact(false), 2000);
+          }
+          return newPos;
+        });
+      }, 50);
+      return () => clearInterval(interval);
+    }
+  }, [showImpact, isMobile]);
 
   const handleLeverClick = () => {
     if (isAnimating) return;
@@ -32,6 +45,31 @@ const MoralDilemma = ({ gameState = {}, setGameState = () => {}, transitionToRoo
 
   const isLeverPulled = gameState.trainChoice === 'save-five';
 
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-800 via-gray-900 to-black p-4 flex items-center justify-center">
+        <div className="max-w-md mx-auto text-center space-y-6">
+          <div className="bg-gray-900 border border-gray-600 rounded-2xl p-8 shadow-2xl">
+            <h1 className="text-2xl font-bold text-white mb-6">
+              Well, this is awkward...
+            </h1>
+            <p className="text-gray-300 text-lg leading-relaxed mb-6">
+              I can't think of anything to do with this page, so, um, let's just forget that this happened.
+            </p>
+          </div>
+          
+          <button
+            onClick={() => transitionToRoom('stickman-game')}
+            className="w-full py-4 bg-gradient-to-r !font-thin from-blue-300 to-blue-900 hover:from-blue-500 hover:to-blue-600 text-white rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+          >
+            Proceed
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop version (EXACTLY the same as original)
   const Person = ({ x, y, color = '#ef4444', isChild = false, isDanger = false }) => (
     <div 
       className={`absolute transition-all duration-300 ${isDanger && showImpact ? 'animate-pulse' : ''}`} 
@@ -79,8 +117,8 @@ const MoralDilemma = ({ gameState = {}, setGameState = () => {}, transitionToRoo
       className="absolute transition-all duration-100 ease-linear"
       style={{ 
         left: `${position}%`,
-        bottom: isOnUpperTrack && position > 45 ? '160px' : '120px', // Proper vertical positioning
-        transform: isOnUpperTrack && position > 45 ? 'rotate(-16deg)' : 'rotate(0deg)', // Fix rotation
+        bottom: isOnUpperTrack && position > 45 ? '160px' : '120px',
+        transform: isOnUpperTrack && position > 45 ? 'rotate(-16deg)' : 'rotate(0deg)',
         zIndex: 10
       }}
     >
